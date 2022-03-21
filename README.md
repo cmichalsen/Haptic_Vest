@@ -1,6 +1,6 @@
 # Haptic Vest
 Designed to work with games that support BHaptics using their available websocket interface on localhost port 15881. 
-This project was inspired by https://github.com/bhaptics/tact-python. More information on BHaptics interface can be 
+This project was inspired by https://github.com/bhaptics/tact-python and https://github.com/PointlesslyUseful/VRVest. Thank you! More information on BHaptics interface can be 
 found at https://github.com/bhaptics/haptic-library. I am initially focusing on the front vest for 
 development simplicity. Many of the parts chosen were what I had on hand. I expect these to change later on.
 
