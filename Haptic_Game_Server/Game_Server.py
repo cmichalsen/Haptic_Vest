@@ -6,9 +6,6 @@ import json
 from Data_Vest import *
 from Motor import *
 
-# For more information check out
-# https://github.com/bhaptics/tact-python
-
 # Create websocket connection to Haptic vest module
 ws = create_connection("ws://192.168.0.53:80/ws")
 
