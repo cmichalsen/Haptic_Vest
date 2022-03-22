@@ -2614,6 +2614,650 @@ ZERO_CAL = {
   "Submit": []
 }
 
+PHAS_PLAYER_DIE = {
+  "Register": [
+    {
+      "Key": "RifleImpact(armored)850B8AD049A476C85D5A619200CDEDD0",
+      "Project": {
+        "createdAt": 1603427379392,
+        "description": "",
+        "layout": {
+          "layouts": {
+            "VestBack": [
+              {
+                "index": 0,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "index": 1,
+                "x": 0.333,
+                "y": 0
+              },
+              {
+                "index": 2,
+                "x": 0.667,
+                "y": 0
+              },
+              {
+                "index": 3,
+                "x": 1,
+                "y": 0
+              },
+              {
+                "index": 4,
+                "x": 0,
+                "y": 0.25
+              },
+              {
+                "index": 5,
+                "x": 0.333,
+                "y": 0.25
+              },
+              {
+                "index": 6,
+                "x": 0.667,
+                "y": 0.25
+              },
+              {
+                "index": 7,
+                "x": 1,
+                "y": 0.25
+              },
+              {
+                "index": 8,
+                "x": 0,
+                "y": 0.5
+              },
+              {
+                "index": 9,
+                "x": 0.333,
+                "y": 0.5
+              },
+              {
+                "index": 10,
+                "x": 0.667,
+                "y": 0.5
+              },
+              {
+                "index": 11,
+                "x": 1,
+                "y": 0.5
+              },
+              {
+                "index": 12,
+                "x": 0,
+                "y": 0.75
+              },
+              {
+                "index": 13,
+                "x": 0.333,
+                "y": 0.75
+              },
+              {
+                "index": 14,
+                "x": 0.667,
+                "y": 0.75
+              },
+              {
+                "index": 15,
+                "x": 1,
+                "y": 0.75
+              },
+              {
+                "index": 16,
+                "x": 0,
+                "y": 1
+              },
+              {
+                "index": 17,
+                "x": 0.333,
+                "y": 1
+              },
+              {
+                "index": 18,
+                "x": 0.667,
+                "y": 1
+              },
+              {
+                "index": 19,
+                "x": 1,
+                "y": 1
+              }
+            ],
+            "VestFront": [
+              {
+                "index": 0,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "index": 1,
+                "x": 0.333,
+                "y": 0
+              },
+              {
+                "index": 2,
+                "x": 0.667,
+                "y": 0
+              },
+              {
+                "index": 3,
+                "x": 1,
+                "y": 0
+              },
+              {
+                "index": 4,
+                "x": 0,
+                "y": 0.25
+              },
+              {
+                "index": 5,
+                "x": 0.333,
+                "y": 0.25
+              },
+              {
+                "index": 6,
+                "x": 0.667,
+                "y": 0.25
+              },
+              {
+                "index": 7,
+                "x": 1,
+                "y": 0.25
+              },
+              {
+                "index": 8,
+                "x": 0,
+                "y": 0.5
+              },
+              {
+                "index": 9,
+                "x": 0.333,
+                "y": 0.5
+              },
+              {
+                "index": 10,
+                "x": 0.667,
+                "y": 0.5
+              },
+              {
+                "index": 11,
+                "x": 1,
+                "y": 0.5
+              },
+              {
+                "index": 12,
+                "x": 0,
+                "y": 0.75
+              },
+              {
+                "index": 13,
+                "x": 0.333,
+                "y": 0.75
+              },
+              {
+                "index": 14,
+                "x": 0.667,
+                "y": 0.75
+              },
+              {
+                "index": 15,
+                "x": 1,
+                "y": 0.75
+              },
+              {
+                "index": 16,
+                "x": 0,
+                "y": 1
+              },
+              {
+                "index": 17,
+                "x": 0.333,
+                "y": 1
+              },
+              {
+                "index": 18,
+                "x": 0.667,
+                "y": 1
+              },
+              {
+                "index": 19,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "name": "Tactot",
+          "type": "Tactot"
+        },
+        "mediaFileDuration": 10,
+        "name": "Vest_PlayerDie",
+        "tracks": [
+          {
+            "effects": [
+              {
+                "modes": {
+                  "VestBack": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 1500,
+                          "playbackType": "NONE",
+                          "startTime": 0,
+                          "pointList": []
+                        }
+                      ]
+                    },
+                    "mode": "PATH_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "FADE_IN",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 0.5,
+                              "y": 0
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 1500,
+                              "x": 0,
+                              "y": 0
+                            }
+                          ],
+                          "visible": True
+                        },
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "FADE_IN",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 0.5,
+                              "y": 0
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 1500,
+                              "x": 1,
+                              "y": 0
+                            }
+                          ],
+                          "visible": True
+                        },
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "FADE_IN",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 0.51,
+                              "y": 0.21
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 1500,
+                              "x": 0,
+                              "y": 0.13
+                            }
+                          ],
+                          "visible": True
+                        },
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "FADE_IN",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 0.5,
+                              "y": 0.2
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 1500,
+                              "x": 1,
+                              "y": 0.13
+                            }
+                          ],
+                          "visible": True
+                        }
+                      ]
+                    }
+                  },
+                  "VestFront": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 1500,
+                          "playbackType": "NONE",
+                          "startTime": 0,
+                          "pointList": []
+                        }
+                      ]
+                    },
+                    "mode": "PATH_MODE",
+                    "pathMode": {
+                      "feedback": []
+                    }
+                  }
+                },
+                "name": "Effect 1",
+                "offsetTime": 1500,
+                "startTime": 0
+              },
+              {
+                "modes": {
+                  "VestBack": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": []
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  },
+                  "VestFront": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 2500,
+                          "playbackType": "NONE",
+                          "startTime": 0,
+                          "pointList": []
+                        }
+                      ]
+                    },
+                    "mode": "PATH_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 0,
+                              "y": 0
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 2500,
+                              "x": 0.5,
+                              "y": 0
+                            }
+                          ],
+                          "visible": True
+                        },
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 1,
+                              "y": 0
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 2500,
+                              "x": 0.5,
+                              "y": 0
+                            }
+                          ],
+                          "visible": True
+                        },
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 0,
+                              "y": 0.21
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 2500,
+                              "x": 0.5,
+                              "y": 0.31
+                            }
+                          ],
+                          "visible": True
+                        },
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 1,
+                              "y": 0.21
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 2500,
+                              "x": 0.5,
+                              "y": 0.3
+                            }
+                          ],
+                          "visible": True
+                        }
+                      ]
+                    }
+                  }
+                },
+                "name": "Effect 2",
+                "offsetTime": 2500,
+                "startTime": 1501
+              },
+              {
+                "modes": {
+                  "VestBack": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 800,
+                          "playbackType": "FADE_OUT",
+                          "pointList": [
+                            {
+                              "index": 0,
+                              "intensity": 0.8
+                            },
+                            {
+                              "index": 1,
+                              "intensity": 0.8
+                            },
+                            {
+                              "index": 2,
+                              "intensity": 0.8
+                            },
+                            {
+                              "index": 3,
+                              "intensity": 0.8
+                            }
+                          ],
+                          "startTime": 0
+                        }
+                      ]
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  },
+                  "VestFront": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 800,
+                          "playbackType": "FADE_OUT",
+                          "pointList": [
+                            {
+                              "index": 1,
+                              "intensity": 0.8
+                            },
+                            {
+                              "index": 2,
+                              "intensity": 0.8
+                            },
+                            {
+                              "index": 0,
+                              "intensity": 0.8
+                            },
+                            {
+                              "index": 3,
+                              "intensity": 0.8
+                            },
+                            {
+                              "index": 6,
+                              "intensity": 0.8
+                            },
+                            {
+                              "index": 5,
+                              "intensity": 0.8
+                            }
+                          ],
+                          "startTime": 0
+                        }
+                      ]
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                "name": "Effect 3",
+                "offsetTime": 800,
+                "startTime": 4004
+              }
+            ],
+            "enable": True
+          },
+          {
+            "effects": [
+              {
+                "modes": {
+                  "VestBack": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 4000,
+                          "playbackType": "NONE",
+                          "startTime": 0,
+                          "pointList": []
+                        }
+                      ]
+                    },
+                    "mode": "PATH_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "FADE_OUT",
+                          "pointList": [
+                            {
+                              "intensity": 0.5,
+                              "time": 0,
+                              "x": 0.51,
+                              "y": 0
+                            },
+                            {
+                              "intensity": 0.5,
+                              "time": 4000,
+                              "x": 0.51,
+                              "y": 1
+                            }
+                          ],
+                          "visible": True
+                        }
+                      ]
+                    }
+                  },
+                  "VestFront": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 4000,
+                          "playbackType": "NONE",
+                          "startTime": 0,
+                          "pointList": []
+                        }
+                      ]
+                    },
+                    "mode": "PATH_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                "name": "Effect 4",
+                "offsetTime": 4000,
+                "startTime": 0
+              }
+            ],
+            "enable": True
+          }
+        ],
+        "updatedAt": 1603443539753
+      },
+      "durationMillis": 0,
+      "intervalMillis": 20,
+      "size": 20
+    }
+  ],
+  "Submit": []
+}
+
 ALL_VEST_MOTORS_ON = {'VestFront': [1, 1, 1, 1, 1, 1, 1, 1, 1], 'VestBack': [1, 1, 1, 1, 1, 1, 1, 1, 1]}
 
 ALL_VEST_MOTORS_OFF = {'VestFront': [0, 0, 0, 0, 0, 0, 0, 0, 0], 'VestBack': [0, 0, 0, 0, 0, 0, 0, 0, 0]}
+
+TOGGLE_VEST_MOTORS_ON = {'VestFront': [0, 0, 0, 0, 0, 0, 0, 0, 1], 'VestBack': [0, 0, 0, 0, 0, 0, 0, 0, 0]}

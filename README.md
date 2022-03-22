@@ -32,3 +32,9 @@ opportunity to meet and work with others. Please feel free to join in on this.
     * Need to research other options such as ESP32.
 * It is not obvious when the microcontroller is connected to WiFi and/or the game server. 
     * Plan to add a couple of status LEDs
+  
+## Resources
+* <a href="https://designer.bhaptics.com/">Haptic Designer</a>
+  * <a href="https://www.youtube.com/watch?v=Pyq9GHdchzc">Haptic Designer Tutorial</a>
+* <a href="https://github.com/bhaptics/haptic-guide">bHaptics Guide</a>
+  * *Good resource for vest operation examples* 
