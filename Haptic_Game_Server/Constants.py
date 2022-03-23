@@ -1,3 +1,6 @@
+# Minimum time between motor commands
+TIME_INTERVAL = 20
+
 # Scale time.sleep functions in milliseconds.
 TIME_SCALE = 0.001
 
