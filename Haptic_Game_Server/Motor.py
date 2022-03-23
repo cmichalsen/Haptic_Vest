@@ -1,6 +1,10 @@
 from Haptic_Game_Server.Constants import MOTORS, MOTOR_MINIMUM_POWER
 
-MOTOR_RANGE = 0.3
+# For testing with LEDs
+MOTOR_RANGE = 0.35
+
+# For PS4 Motors
+# MOTOR_RANGE = 0.5
 
 
 def migrate_motor_commands(current_commands, new_commands):

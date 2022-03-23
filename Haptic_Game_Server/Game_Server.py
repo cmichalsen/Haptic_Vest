@@ -3,6 +3,7 @@ import websockets
 from websocket import create_connection
 import json
 from Data_Vest import *
+from Haptic_Game_Server.Constants import MOTOR_MINIMUM_POWER
 from Haptic_Game_Server.Haptics_Player import HapticsPlayer
 
 
@@ -10,11 +11,11 @@ class GameServer:
     def __init__(self):
         # Create websocket connection to Haptic vest module
         self.ws = create_connection("ws://192.168.0.53:80/ws")
-        # self.test_data()
+        self.test_data()
 
     def test_data(self):
-        HapticsPlayer(PHAS_RAIN["Register"], self)
-        self.send(ZERO_CAL_BIG_DATA)
+        HapticsPlayer(PHAS_PLAYER_DIE["Register"], self)
+        # self.send(ZERO_CAL_BIG_DATA)
 
     def detected_haptic_events(self, data):
         """ Check for haptic events

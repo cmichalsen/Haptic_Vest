@@ -7,8 +7,12 @@ TIME_SCALE = 0.001
 # Time between each command during constant time effects
 TIME_CONST = 50
 
-# Set minimum % power for PWM output
-MOTOR_MINIMUM_POWER = 0.7
+# Set minimum % power for PWM output (For PS4 Motors)
+# MOTOR_MINIMUM_POWER = 0.7
+
+# For testing with LEDs
+MOTOR_MINIMUM_POWER = 0.0
+
 
 # Motor x,y coordinates
 MOTORS = [[0, 0],
