@@ -79,7 +79,7 @@ class Project:
             TIME_ELAPSED += TIME_INTERVAL
 
             global MOTOR_COMMANDS
-            self.cb(MOTOR_COMMANDS, TIME_ELAPSED)
+            self.cb(MOTOR_COMMANDS)
 
             self.reset_motor_commands()
 
