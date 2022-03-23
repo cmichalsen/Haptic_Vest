@@ -10,10 +10,11 @@ class GameServer:
     def __init__(self):
         # Create websocket connection to Haptic vest module
         self.ws = create_connection("ws://192.168.0.53:80/ws")
+        # self.test_data()
 
     def test_data(self):
-        HapticsPlayer(PHAS_PLAYER_DIE["Register"], self)
-        self.send(ALL_VEST_MOTORS_OFF)
+        HapticsPlayer(PHAS_RAIN["Register"], self)
+        self.send(ZERO_CAL_BIG_DATA)
 
     def detected_haptic_events(self, data):
         """ Check for haptic events
@@ -49,9 +50,8 @@ class GameServer:
                 data = await websocket.recv()
 
                 json_data = json.loads(data.replace("'", "\""))
-
                 if self.detected_haptic_events(json_data):
-                    HapticsPlayer(json_data["Register"][0], self)
+                    HapticsPlayer(json_data["Register"], self)
 
             except Exception as e:
                 print(f"Server exception: {e}")
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     game_server = GameServer()
 
     # Host websocket server for games to communicate with
-    start_server = websockets.serve(game_server.server, "localhost", 15881)
+    start_server = websockets.serve(game_server.server, "localhost", 15881, max_size=None)
 
     # Start and run websocket server forever
     asyncio.get_event_loop().run_until_complete(start_server)

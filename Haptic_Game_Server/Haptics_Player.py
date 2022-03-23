@@ -3,6 +3,7 @@ from datetime import datetime
 
 # Used for testing dummy data
 from Haptic_Game_Server.Constants import TIME_INTERVAL, TIME_SCALE
+from Haptic_Game_Server.Data_Vest import ALL_VEST_MOTORS_OFF
 from Haptic_Game_Server.Motor import get_updated_motor_commands, migrate_motor_commands
 
 CLOCK_START = 0
@@ -22,9 +23,11 @@ class HapticsPlayer:
 
     def setup_haptics(self, haptics_data):
         for project_data in haptics_data:
-            self.projects.append(HapticProject(project_data, self.cb))
+            if "VestFront" in project_data['Project']['layout']['layouts']:
+                self.projects.append(HapticProject(project_data, self.cb))
 
         self.run_haptics()
+        self.cb(ALL_VEST_MOTORS_OFF)
 
     def run_haptics(self):
         """ Run all events required to generate motor commands
@@ -51,7 +54,9 @@ class Project:
     def __init__(self, project_data, cb):
         # Consider switching to this value for clock start when testing with live data
         self.cb = cb
-        self.createdAt = project_data["createdAt"]
+        self.createdAt = None
+        if "createdAt" in project_data:
+            self.createdAt = project_data["createdAt"]
         # self.description = project_data["description"]
         self.layout = project_data["layout"]
         self.mediaFileDuration = project_data["mediaFileDuration"] * 1000
@@ -244,8 +249,8 @@ class PathPoint:
         self.x = point_data["x"]
         self.y = point_data["y"]
         self.next_point = next_point_data
-        self.x_rate = 0
-        self.y_rate = 0
+        self.x_rate = 0.0
+        self.y_rate = 0.0
         self.get_rates()
 
     def get_rates(self):
