@@ -14,14 +14,15 @@ MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0], "VestBack": [0, 0, 0
 
 
 class HapticsPlayer:
-    def __init__(self, data):
+    def __init__(self, data, parent):
         self.projects = []
+        self.cb = parent.send
         self.setup_haptics(data)
         self.test = 0
 
     def setup_haptics(self, haptics_data):
         for project_data in haptics_data:
-            self.projects.append(HapticProject(project_data))
+            self.projects.append(HapticProject(project_data, self.cb))
 
         self.run_haptics()
 
@@ -34,9 +35,10 @@ class HapticsPlayer:
 
 
 class HapticProject:
-    def __init__(self, haptic_project_data):
+    def __init__(self, haptic_project_data, cb):
+        self.cb = cb
         self.key = haptic_project_data["Key"]
-        self.project = Project(haptic_project_data["Project"])
+        self.project = Project(haptic_project_data["Project"], self.cb)
 
         global CLOCK_START
         CLOCK_START = datetime.now()
@@ -46,8 +48,9 @@ class HapticProject:
 
 
 class Project:
-    def __init__(self, project_data):
+    def __init__(self, project_data, cb):
         # Consider switching to this value for clock start when testing with live data
+        self.cb = cb
         self.createdAt = project_data["createdAt"]
         self.description = project_data["description"]
         self.layout = project_data["layout"]
@@ -76,9 +79,7 @@ class Project:
             TIME_ELAPSED += TIME_INTERVAL
 
             global MOTOR_COMMANDS
-            print(MOTOR_COMMANDS)
-
-            # TODO: Call websocket here
+            self.cb(MOTOR_COMMANDS)
 
             self.reset_motor_commands()
 
@@ -96,8 +97,9 @@ class Track:
             self.effects.append(Effect(effect))
 
     def run(self):
-        for effect in self.effects:
-            effect.run()
+        if self.enable:
+            for effect in self.effects:
+                effect.run()
 
 
 class Effect:
@@ -108,7 +110,7 @@ class Effect:
         self.modes = Mode(effect_data["modes"])
 
     def run(self):
-        if TIME_ELAPSED >= self.start_time:
+        if self.start_time <= TIME_ELAPSED < self.offset_time:
             self.modes.run()
 
 
@@ -248,7 +250,7 @@ class PathPoint:
         self.y += self.y_rate
 
     def is_node_active(self):
-        return TIME_ELAPSED <= self.time < self.next_point["time"]
+        return self.time <= TIME_ELAPSED < self.next_point["time"]
 
     def update_motor_commands(self):
         global MOTOR_COMMANDS

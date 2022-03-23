@@ -1,6 +1,6 @@
 from Haptic_Game_Server.Constants import MOTORS, MOTOR_MINIMUM_POWER
 
-MOTOR_RANGE = 0.5
+MOTOR_RANGE = 0.35
 
 
 def migrate_motor_commands(current_commands, new_commands):
@@ -11,6 +11,7 @@ def migrate_motor_commands(current_commands, new_commands):
             results.append(command)
         else:
             results.append(current_commands[command_index])
+        command_index += 1
     return results
 
 
@@ -31,7 +32,7 @@ def get_intensity(motor_x, motor_y, target_x, target_y, target_intensity):
     intensity = 0
 
     if motor_x == target_x and motor_y == target_y:
-        intensity = 1
+        intensity = target_intensity
     else:
         x_dist_from_motor = abs(motor_x - target_x)
         y_dist_from_motor = abs(motor_y - target_y)
