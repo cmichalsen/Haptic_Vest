@@ -60,9 +60,7 @@ class GameServer:
                 pass
 
     def send(self, commands):
-        print(f"Sending: {commands}")
         self.ws.send(json.dumps(commands))
-        print("Sent")
 
 
 if __name__ == "__main__":

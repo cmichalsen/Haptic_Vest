@@ -3,7 +3,7 @@ from datetime import datetime
 
 # Used for testing dummy data
 from Haptic_Game_Server.Constants import TIME_INTERVAL, TIME_SCALE
-from Haptic_Game_Server.Motor import get_intensity, get_updated_motor_commands, migrate_motor_commands
+from Haptic_Game_Server.Motor import get_updated_motor_commands, migrate_motor_commands
 
 CLOCK_START = 0
 
@@ -79,7 +79,7 @@ class Project:
             TIME_ELAPSED += TIME_INTERVAL
 
             global MOTOR_COMMANDS
-            self.cb(MOTOR_COMMANDS)
+            self.cb(MOTOR_COMMANDS, TIME_ELAPSED)
 
             self.reset_motor_commands()
 
@@ -107,7 +107,7 @@ class Effect:
         self.name = effect_data["name"]
         self.offset_time = effect_data["offsetTime"]
         self.start_time = effect_data["startTime"]
-        self.modes = Mode(effect_data["modes"])
+        self.modes = Mode(effect_data["modes"], self.start_time, self.offset_time)
 
     def run(self):
         if self.start_time <= TIME_ELAPSED < self.offset_time:
@@ -115,9 +115,9 @@ class Effect:
 
 
 class Mode:
-    def __init__(self, mode_data):
-        self.vest_back = Vest(mode_data["VestBack"], "VestBack")
-        self.vest_front = Vest(mode_data["VestFront"], "VestFront")
+    def __init__(self, mode_data, effect_start_time, effect_offset_time):
+        self.vest_back = Vest(mode_data["VestBack"], "VestBack", effect_start_time, effect_offset_time)
+        self.vest_front = Vest(mode_data["VestFront"], "VestFront", effect_start_time, effect_offset_time)
 
     def run(self):
         self.vest_back.run()
@@ -125,9 +125,9 @@ class Mode:
 
 
 class Vest:
-    def __init__(self, vest_data, vest_type):
-        self.dot_mode = DotMode(vest_data["dotMode"], vest_type)
-        self.path_mode = PathMode(vest_data["pathMode"], vest_type)
+    def __init__(self, vest_data, vest_type, effect_start_time, effect_offset_time):
+        self.dot_mode = DotMode(vest_data["dotMode"], vest_type, effect_start_time, effect_offset_time)
+        self.path_mode = PathMode(vest_data["pathMode"], vest_type, effect_start_time, effect_offset_time)
         self.vest_type = vest_type
 
     def run(self):
@@ -136,7 +136,9 @@ class Vest:
 
 
 class DotMode:
-    def __init__(self, dot_data, vest_type):
+    def __init__(self, dot_data, vest_type, effect_start_time, effect_offset_time):
+        self.effect_start_time = effect_start_time
+        self.effect_offset_time = effect_offset_time
         self.dot_connected = dot_data["dotConnected"]
         self.vest_type = vest_type
         self.feedback = []
@@ -144,7 +146,7 @@ class DotMode:
 
     def setup_feedback(self, feedback):
         for item in feedback:
-            self.feedback.append(DotFeedback(item, self.vest_type))
+            self.feedback.append(DotFeedback(item, self.vest_type, self.effect_start_time, self.effect_offset_time))
 
     def run(self):
         for item in self.feedback:
@@ -152,7 +154,9 @@ class DotMode:
 
 
 class DotFeedback:
-    def __init__(self, feedback_data, vest_type):
+    def __init__(self, feedback_data, vest_type, effect_start_time, effect_offset_time):
+        self.effect_start_time = effect_start_time
+        self.effect_offset_time = effect_offset_time
         self.end_time = feedback_data["endTime"]
         self.playback_type = feedback_data["playbackType"]
         self.start_time = feedback_data["startTime"]
@@ -162,7 +166,7 @@ class DotFeedback:
 
     def setup_point_list(self, point_list):
         for point in point_list:
-            self.point_list.append(DotPoint(point, self.vest_type))
+            self.point_list.append(DotPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time))
 
     def run(self):
         for point in self.point_list:
@@ -170,7 +174,9 @@ class DotFeedback:
 
 
 class DotPoint:
-    def __init__(self, point_data, vest_type):
+    def __init__(self, point_data, vest_type, effect_start_time, effect_offset_time):
+        self.effect_start_time = effect_start_time
+        self.effect_offset_time = effect_offset_time
         self.index = point_data["index"]
         self.intensity = point_data["intensity"]
         self.vest_type = vest_type
@@ -181,14 +187,16 @@ class DotPoint:
 
 
 class PathMode:
-    def __init__(self, path_data, vest_type):
+    def __init__(self, path_data, vest_type, effect_start_time, effect_offset_time):
+        self.effect_start_time = effect_start_time
+        self.effect_offset_time = effect_offset_time
         self.feedback = []
         self.vest_type = vest_type
         self.setup_feedback(path_data["feedback"])
 
     def setup_feedback(self, feedback):
         for item in feedback:
-            self.feedback.append(PathFeedback(item, self.vest_type))
+            self.feedback.append(PathFeedback(item, self.vest_type, self.effect_start_time, self.effect_offset_time))
 
     def run(self):
         for item in self.feedback:
@@ -196,7 +204,9 @@ class PathMode:
 
 
 class PathFeedback:
-    def __init__(self, feedback_data, vest_type):
+    def __init__(self, feedback_data, vest_type, effect_start_time, effect_offset_time):
+        self.effect_start_time = effect_start_time
+        self.effect_offset_time = effect_offset_time
         self.moving_pattern = feedback_data["movingPattern"]
         self.playback_type = feedback_data["playbackType"]
         self.point_list = []
@@ -208,10 +218,10 @@ class PathFeedback:
         point_index = 1
         for point in point_list:
             if point_index < point_list_count:
-                self.point_list.append(PathPoint(point, self.vest_type, point_list[point_index]))
+                self.point_list.append(PathPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time, point_list[point_index]))
             else:
                 # There are no more points after this one
-                self.point_list.append(PathPoint(point, self.vest_type))
+                self.point_list.append(PathPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time))
             point_index += 1
 
     def run(self):
@@ -220,7 +230,10 @@ class PathFeedback:
 
 
 class PathPoint:
-    def __init__(self, point_data, vest_type, next_point_data=None):
+    def __init__(self, point_data, vest_type, effect_start_time, effect_offset_time, next_point_data=None):
+        self.effect_start_time = effect_start_time
+        self.effect_offset_time = effect_offset_time
+        self.vest_type = vest_type
         self.intensity = point_data["intensity"]
         self.time = point_data["time"]
         self.x = point_data["x"]
@@ -229,16 +242,17 @@ class PathPoint:
         self.x_rate = 0
         self.y_rate = 0
         self.get_rates()
-        self.vest_type = vest_type
 
     def get_rates(self):
         if self.next_point is not None:
-            duration = self.next_point["time"] - self.time
+            duration = self.effect_offset_time - self.effect_start_time
             x_distance = self.next_point["x"] - self.x
             y_distance = self.next_point["y"] - self.y
-            time_intervals = duration / TIME_INTERVAL
-            self.x_rate = x_distance / time_intervals
-            self.y_rate = y_distance / time_intervals
+
+            if duration > 0:
+                time_intervals = duration / TIME_INTERVAL
+                self.x_rate = x_distance / time_intervals
+                self.y_rate = y_distance / time_intervals
 
     def run(self):
         if self.next_point is not None and self.is_node_active():
@@ -254,6 +268,6 @@ class PathPoint:
 
     def update_motor_commands(self):
         global MOTOR_COMMANDS
-        commands = get_updated_motor_commands(self.x, self.y, self.intensity)
+        commands = get_updated_motor_commands(self.x, self.y, self.intensity, TIME_ELAPSED)
         MOTOR_COMMANDS[self.vest_type] = migrate_motor_commands(MOTOR_COMMANDS[self.vest_type], commands)
         pass
