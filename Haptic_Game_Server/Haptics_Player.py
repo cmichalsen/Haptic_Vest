@@ -52,7 +52,7 @@ class Project:
         # Consider switching to this value for clock start when testing with live data
         self.cb = cb
         self.createdAt = project_data["createdAt"]
-        self.description = project_data["description"]
+        # self.description = project_data["description"]
         self.layout = project_data["layout"]
         self.mediaFileDuration = project_data["mediaFileDuration"] * 1000
         self.name = project_data["name"]
@@ -215,14 +215,18 @@ class PathFeedback:
 
     def setup_point_list(self, point_list):
         point_list_count = point_list.__len__()
-        point_index = 1
-        for point in point_list:
-            if point_index < point_list_count:
-                self.point_list.append(PathPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time, point_list[point_index]))
-            else:
-                # There are no more points after this one
-                self.point_list.append(PathPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time))
-            point_index += 1
+
+        if point_list_count == 1:
+            self.point_list.append(PathPoint(point_list[0], self.vest_type, self.effect_start_time, self.effect_offset_time, None, True))
+        else:
+            point_index = 1
+            for point in point_list:
+                if point_index < point_list_count:
+                    self.point_list.append(PathPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time, point_list[point_index]))
+                else:
+                    # There are no more points after this one
+                    self.point_list.append(PathPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time))
+                point_index += 1
 
     def run(self):
         for point in self.point_list:
@@ -230,7 +234,8 @@ class PathFeedback:
 
 
 class PathPoint:
-    def __init__(self, point_data, vest_type, effect_start_time, effect_offset_time, next_point_data=None):
+    def __init__(self, point_data, vest_type, effect_start_time, effect_offset_time, next_point_data=None, is_single_point=False):
+        self.is_single_point = is_single_point
         self.effect_start_time = effect_start_time
         self.effect_offset_time = effect_offset_time
         self.vest_type = vest_type
@@ -255,7 +260,7 @@ class PathPoint:
                 self.y_rate = y_distance / time_intervals
 
     def run(self):
-        if self.next_point is not None and self.is_node_active():
+        if self.next_point is not None and self.is_node_active() or self.is_single_point and self.is_node_active():
             self.update_motor_commands()
             self.move_point()
 
@@ -264,7 +269,12 @@ class PathPoint:
         self.y += self.y_rate
 
     def is_node_active(self):
-        return self.time <= TIME_ELAPSED < self.next_point["time"]
+        results = False
+        if self.is_single_point:
+            results = self.time <= TIME_ELAPSED < self.effect_offset_time
+        else:
+            results = self.time <= TIME_ELAPSED < self.next_point["time"]
+        return results
 
     def update_motor_commands(self):
         global MOTOR_COMMANDS
