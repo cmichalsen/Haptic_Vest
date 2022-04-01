@@ -1,9 +1,10 @@
 import asyncio
+import time
+
 import websockets
 from websocket import create_connection
 import json
 from Data_Vest import *
-from Haptic_Game_Server.Constants import MOTOR_MINIMUM_POWER
 from Haptic_Game_Server.Haptics_Player import HapticsPlayer
 
 
@@ -11,11 +12,15 @@ class GameServer:
     def __init__(self):
         # Create websocket connection to Haptic vest module
         self.ws = create_connection("ws://192.168.0.53:80/ws")
+        self.haptics = HapticsPlayer(self)
         self.test_data()
 
     def test_data(self):
-        HapticsPlayer(PHAS_PLAYER_DIE["Register"], self)
-        # self.send(ZERO_CAL_BIG_DATA)
+        # Simulate continuous incoming data
+        while True:
+            self.haptics.add_haptics_data(PHAS_PLAYER_DIE["Register"])
+            time.sleep(1)
+
 
     def detected_haptic_events(self, data):
         """ Check for haptic events
@@ -52,13 +57,15 @@ class GameServer:
 
                 json_data = json.loads(data.replace("'", "\""))
                 if self.detected_haptic_events(json_data):
-                    HapticsPlayer(json_data["Register"], self)
+                    self.haptics.add_haptics_data(json_data["Register"])
 
             except Exception as e:
                 print(f"Server exception: {e}")
+                self.ws = create_connection("ws://192.168.0.53:80/ws")
                 pass
 
     def send(self, commands):
+        print(commands)
         self.ws.send(json.dumps(commands))
 
 
@@ -70,8 +77,4 @@ if __name__ == "__main__":
 
     # Start and run websocket server forever
     asyncio.get_event_loop().run_until_complete(start_server)
-
-    # ws.send(json.dumps(ALL_VEST_MOTORS_ON))
-    # ws.send(json.dumps(ALL_VEST_MOTORS_OFF))
-
     asyncio.get_event_loop().run_forever()

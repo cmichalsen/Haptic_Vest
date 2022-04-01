@@ -98,6 +98,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len)
   {
 
     // Ex. {"VestFront": [0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "VestBack": []}
+//    Serial.write(data, len);
+//    Serial.println("");
 
     // Convert incoming data to Json
     const uint8_t size = JSON_OBJECT_SIZE(2) + 200;
