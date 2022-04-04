@@ -1,8 +1,12 @@
+import json
 import time
 from threading import Thread
 from datetime import datetime, timedelta
-from Haptic_Game_Server.Constants import TIME_INTERVAL, TIME_SCALE
-from Haptic_Game_Server.Motor import get_updated_motor_commands, migrate_motor_commands
+from Haptic_Game_Server.Constants import TIME_INTERVAL, TIME_SCALE, FADE_IN_FADE_OUT
+from Haptic_Game_Server.Motor import get_updated_path_motor_commands, migrate_motor_commands, \
+    get_updated_dots_motor_commands, fade_in_fade_out
+from websocket import create_connection
+
 
 # Keep track of current time
 CLOCK = datetime.now()
@@ -12,15 +16,18 @@ PREV_MOTOR_COMMANDS = {}
 
 
 class HapticsPlayer:
-    def __init__(self, parent):
-        self.projects_front_vest = HapticProject(parent.send)
+    def __init__(self):
+        self.projects_front_vest = HapticProject()
         self.test = 0
         self.run_haptics()
 
     def add_haptics_data(self, haptics_data):
         for project_data in haptics_data:
-            if "VestFront" in project_data['Project']['layout']['layouts']:
-                self.projects_front_vest.add_project_data(project_data)
+            try:
+                if "VestFront" in project_data['Project']['layout']['layouts']:
+                    self.projects_front_vest.add_project_data(project_data)
+            except KeyError:
+                pass
 
     def run_haptics(self):
         """ Run all events required to generate motor commands
@@ -30,9 +37,8 @@ class HapticsPlayer:
 
 
 class HapticProject:
-    def __init__(self, cb):
-        self.cb = cb
-        self.project = Project(self.cb)
+    def __init__(self):
+        self.project = Project()
 
         global CLOCK
         CLOCK = datetime.now()
@@ -43,16 +49,14 @@ class HapticProject:
     def run(self):
         thread = Thread(target=self.project.run_tracks, name="Track Processing")
         thread.start()
-        thread_track_cleanup = Thread(target=self.project.remove_old_tracks, name="Track Cleanup")
-        thread_track_cleanup.start()
 
 
 class Project:
-    def __init__(self, cb):
-        self.cb = cb
+    def __init__(self):
         self.tracks = []
-        self.pending_tracks = []
-        self.test = 0
+
+        # Create websocket connection to Haptic vest module
+        self.ws = create_connection("ws://192.168.0.53:80/ws")
 
     def add_tracks(self, project_data):
         track_duration_ms = timedelta(milliseconds=project_data["mediaFileDuration"])
@@ -65,30 +69,32 @@ class Project:
         global MOTOR_COMMANDS
         MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0], "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0]}
 
-    def remove_old_tracks(self):
+    def send(self, commands):
+        print(commands)
+        self.ws.send(json.dumps(commands))
+
+    def run_tracks(self):
+        global PREV_MOTOR_COMMANDS
         global CLOCK
         while True:
             while len(self.tracks) != 0:
+
                 CLOCK = datetime.now()
 
                 for track in self.tracks:
                     track_end_time = track.get_end_time()
                     if track_end_time <= CLOCK:
+                        # Remove expired tracks
                         self.tracks.remove(track)
-
-    def run_tracks(self):
-        global PREV_MOTOR_COMMANDS
-        while True:
-            while len(self.tracks) != 0:
-
-                for track in self.tracks:
-                    track.run()
+                    else:
+                        track.run()
 
                 global MOTOR_COMMANDS
                 try:
                     if MOTOR_COMMANDS != PREV_MOTOR_COMMANDS:
-                        self.cb(MOTOR_COMMANDS)
+                        self.send(MOTOR_COMMANDS)
                 except Exception as e:
+                    print(f"Sending motor command error: {e}")
                     pass
 
                 # Store previous commands to compare for any deltas to prevent duplicate transmissions
@@ -129,7 +135,6 @@ class Effect:
         self.modes = Mode(effect_data["modes"], self.start_time_ms, self.offset_time)
 
     def run(self):
-        # TODO: Use clock times
         if self.start_time <= CLOCK < self.end_time:
             self.modes.run()
 
@@ -186,7 +191,7 @@ class DotFeedback:
 
     def setup_point_list(self, point_list):
         for point in point_list:
-            self.point_list.append(DotPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time))
+            self.point_list.append(DotPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time, self.playback_type))
 
     def run(self):
         for point in self.point_list:
@@ -194,16 +199,42 @@ class DotFeedback:
 
 
 class DotPoint:
-    def __init__(self, point_data, vest_type, effect_start_time, effect_offset_time):
+    def __init__(self, point_data, vest_type, effect_start_time, effect_offset_time, playback_type):
         self.effect_start_time = effect_start_time
         self.effect_offset_time = effect_offset_time
+        self.playback_type = playback_type
+        self.playback_rate = 0
         self.index = point_data["index"]
         self.intensity = point_data["intensity"]
+        self.end_time = (timedelta(milliseconds=self.effect_offset_time)) + CLOCK
+        self.start_time = (timedelta(milliseconds=self.effect_start_time)) + CLOCK
         self.vest_type = vest_type
+        self.setup_playback_rate()
+
+    def setup_playback_rate(self):
+        if self.playback_type == "FADE_IN_OUT":
+            # initialize with fade in rate using an decreased intensity
+            self.playback_rate = FADE_IN_FADE_OUT * -1
+        else:
+            pass
+
+    def update_playback_rate(self):
+        if self.playback_type == "FADE_IN_OUT":
+            # initialize with fade in rate using an increased intensity
+            self.playback_rate = fade_in_fade_out(self.playback_rate)
 
     def run(self):
-        print("Not yet implemented")
-        pass
+        if self.is_node_active():
+            self.update_playback_rate()
+            self.update_motor_commands()
+
+    def is_node_active(self):
+        return self.start_time <= CLOCK < self.end_time
+
+    def update_motor_commands(self):
+        global MOTOR_COMMANDS
+        commands = get_updated_dots_motor_commands(self.intensity + self.playback_rate, self.index)
+        MOTOR_COMMANDS[self.vest_type] = migrate_motor_commands(MOTOR_COMMANDS[self.vest_type], commands)
 
 
 class PathMode:
@@ -263,11 +294,11 @@ class PathPoint:
         self.is_single_point = is_single_point
         self.effect_start_time = effect_start_time
         self.effect_offset_time = effect_offset_time
-        self.end_time = (timedelta(milliseconds=self.effect_offset_time) * 1000) + CLOCK
+        self.end_time = (timedelta(milliseconds=self.effect_offset_time)) + CLOCK
         self.vest_type = vest_type
         self.intensity = point_data["intensity"]
         self.time = point_data["time"]
-        self.start_time = (timedelta(milliseconds=self.time) * 1000) + CLOCK
+        self.start_time = (timedelta(milliseconds=self.time)) + CLOCK
         self.x = point_data["x"]
         self.y = point_data["y"]
         self.next_point = next_point_data
@@ -300,11 +331,10 @@ class PathPoint:
         if self.is_single_point:
             results = self.start_time <= CLOCK < self.end_time
         else:
-            results = self.start_time <= CLOCK < ((timedelta(milliseconds=self.next_point["time"]) * 1000) + CLOCK)
+            results = self.start_time <= CLOCK < ((timedelta(milliseconds=self.next_point["time"])) + CLOCK)
         return results
 
     def update_motor_commands(self):
         global MOTOR_COMMANDS
-        commands = get_updated_motor_commands(self.x, self.y, self.intensity)
+        commands = get_updated_path_motor_commands(self.x, self.y, self.intensity)
         MOTOR_COMMANDS[self.vest_type] = migrate_motor_commands(MOTOR_COMMANDS[self.vest_type], commands)
-        pass

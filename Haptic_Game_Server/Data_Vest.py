@@ -5521,6 +5521,1261 @@ PHAS_RAIN = {
   "Submit": []
 }
 
+PHAS_TRUCK_START = {
+  "Register": [
+    {
+      "Key": "2258b1bc-0597-4434-a856-755e398a20c8",
+      "Project": {
+        "createdAt": 1603357463757,
+        "description": "",
+        "layout": {
+          "layouts": {
+            "VestBack": [
+              {
+                "index": 0,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "index": 1,
+                "x": 0.333,
+                "y": 0
+              },
+              {
+                "index": 2,
+                "x": 0.667,
+                "y": 0
+              },
+              {
+                "index": 3,
+                "x": 1,
+                "y": 0
+              },
+              {
+                "index": 4,
+                "x": 0,
+                "y": 0.25
+              },
+              {
+                "index": 5,
+                "x": 0.333,
+                "y": 0.25
+              },
+              {
+                "index": 6,
+                "x": 0.667,
+                "y": 0.25
+              },
+              {
+                "index": 7,
+                "x": 1,
+                "y": 0.25
+              },
+              {
+                "index": 8,
+                "x": 0,
+                "y": 0.5
+              },
+              {
+                "index": 9,
+                "x": 0.333,
+                "y": 0.5
+              },
+              {
+                "index": 10,
+                "x": 0.667,
+                "y": 0.5
+              },
+              {
+                "index": 11,
+                "x": 1,
+                "y": 0.5
+              },
+              {
+                "index": 12,
+                "x": 0,
+                "y": 0.75
+              },
+              {
+                "index": 13,
+                "x": 0.333,
+                "y": 0.75
+              },
+              {
+                "index": 14,
+                "x": 0.667,
+                "y": 0.75
+              },
+              {
+                "index": 15,
+                "x": 1,
+                "y": 0.75
+              },
+              {
+                "index": 16,
+                "x": 0,
+                "y": 1
+              },
+              {
+                "index": 17,
+                "x": 0.333,
+                "y": 1
+              },
+              {
+                "index": 18,
+                "x": 0.667,
+                "y": 1
+              },
+              {
+                "index": 19,
+                "x": 1,
+                "y": 1
+              }
+            ],
+            "VestFront": [
+              {
+                "index": 0,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "index": 1,
+                "x": 0.333,
+                "y": 0
+              },
+              {
+                "index": 2,
+                "x": 0.667,
+                "y": 0
+              },
+              {
+                "index": 3,
+                "x": 1,
+                "y": 0
+              },
+              {
+                "index": 4,
+                "x": 0,
+                "y": 0.25
+              },
+              {
+                "index": 5,
+                "x": 0.333,
+                "y": 0.25
+              },
+              {
+                "index": 6,
+                "x": 0.667,
+                "y": 0.25
+              },
+              {
+                "index": 7,
+                "x": 1,
+                "y": 0.25
+              },
+              {
+                "index": 8,
+                "x": 0,
+                "y": 0.5
+              },
+              {
+                "index": 9,
+                "x": 0.333,
+                "y": 0.5
+              },
+              {
+                "index": 10,
+                "x": 0.667,
+                "y": 0.5
+              },
+              {
+                "index": 11,
+                "x": 1,
+                "y": 0.5
+              },
+              {
+                "index": 12,
+                "x": 0,
+                "y": 0.75
+              },
+              {
+                "index": 13,
+                "x": 0.333,
+                "y": 0.75
+              },
+              {
+                "index": 14,
+                "x": 0.667,
+                "y": 0.75
+              },
+              {
+                "index": 15,
+                "x": 1,
+                "y": 0.75
+              },
+              {
+                "index": 16,
+                "x": 0,
+                "y": 1
+              },
+              {
+                "index": 17,
+                "x": 0.333,
+                "y": 1
+              },
+              {
+                "index": 18,
+                "x": 0.667,
+                "y": 1
+              },
+              {
+                "index": 19,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "name": "Tactot",
+          "type": "Tactot"
+        },
+        "mediaFileDuration": 15,
+        "name": "Vest_TruckLeave",
+        "tracks": [
+          {
+            "effects": [
+              {
+                "modes": {
+                  "VestBack": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 142,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.5
+                            }
+                          ],
+                          "startTime": 0
+                        },
+                        {
+                          "endTime": 285,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.3
+                            }
+                          ],
+                          "startTime": 142
+                        },
+                        {
+                          "endTime": 428,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.7
+                            }
+                          ],
+                          "startTime": 285
+                        },
+                        {
+                          "endTime": 571,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.6
+                            }
+                          ],
+                          "startTime": 428
+                        },
+                        {
+                          "endTime": 714,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.4
+                            }
+                          ],
+                          "startTime": 571
+                        },
+                        {
+                          "endTime": 857,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.6
+                            }
+                          ],
+                          "startTime": 714
+                        },
+                        {
+                          "endTime": 1000,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.4
+                            }
+                          ],
+                          "startTime": 857
+                        }
+                      ]
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  },
+                  "VestFront": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 142,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.5
+                            }
+                          ],
+                          "startTime": 0
+                        },
+                        {
+                          "endTime": 285,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.3
+                            }
+                          ],
+                          "startTime": 142
+                        },
+                        {
+                          "endTime": 428,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.7
+                            }
+                          ],
+                          "startTime": 285
+                        },
+                        {
+                          "endTime": 571,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.6
+                            }
+                          ],
+                          "startTime": 428
+                        },
+                        {
+                          "endTime": 714,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.4
+                            }
+                          ],
+                          "startTime": 571
+                        },
+                        {
+                          "endTime": 857,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 13,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 16,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.6
+                            }
+                          ],
+                          "startTime": 714
+                        },
+                        {
+                          "endTime": 1000,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 13,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 16,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.4
+                            }
+                          ],
+                          "startTime": 857
+                        }
+                      ]
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                "name": "dot",
+                "offsetTime": 1000,
+                "startTime": 0
+              },
+              {
+                "modes": {
+                  "VestBack": {
+                    "dotMode": {
+                      "dotConnected": True,
+                      "feedback": [
+                        {
+                          "endTime": 250,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.5
+                            }
+                          ],
+                          "startTime": 0
+                        },
+                        {
+                          "endTime": 500,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.3
+                            }
+                          ],
+                          "startTime": 250
+                        },
+                        {
+                          "endTime": 750,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.7
+                            }
+                          ],
+                          "startTime": 500
+                        },
+                        {
+                          "endTime": 1000,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.6
+                            }
+                          ],
+                          "startTime": 750
+                        },
+                        {
+                          "endTime": 1000,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.4
+                            }
+                          ],
+                          "startTime": 1000
+                        }
+                      ]
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  },
+                  "VestFront": {
+                    "dotMode": {
+                      "dotConnected": True,
+                      "feedback": [
+                        {
+                          "endTime": 250,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.5
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.5
+                            }
+                          ],
+                          "startTime": 0
+                        },
+                        {
+                          "endTime": 500,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.3
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.3
+                            }
+                          ],
+                          "startTime": 250
+                        },
+                        {
+                          "endTime": 750,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 13,
+                              "intensity": 0.7
+                            },
+                            {
+                              "index": 14,
+                              "intensity": 0.7
+                            }
+                          ],
+                          "startTime": 500
+                        },
+                        {
+                          "endTime": 1000,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.6
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.6
+                            }
+                          ],
+                          "startTime": 750
+                        },
+                        {
+                          "endTime": 1000,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.4
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.4
+                            }
+                          ],
+                          "startTime": 1000
+                        }
+                      ]
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                "name": "dot copy 1",
+                "offsetTime": 1000,
+                "startTime": 1162,
+                "trackIndex": 0
+              }
+            ],
+            "enable": True
+          },
+          {
+            "effects": [
+              {
+                "modes": {
+                  "VestBack": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 1778,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 0
+                        },
+                        {
+                          "endTime": 3556,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 1778
+                        },
+                        {
+                          "endTime": 5334,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 3556
+                        },
+                        {
+                          "endTime": 7112,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 5334
+                        },
+                        {
+                          "endTime": 8890,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 7112
+                        }
+                      ]
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": [
+                        {
+                          "movingPattern": "CONST_SPEED",
+                          "playbackType": "NONE",
+                          "visible": True,
+                          "pointList": []
+                        }
+                      ]
+                    }
+                  },
+                  "VestFront": {
+                    "dotMode": {
+                      "dotConnected": False,
+                      "feedback": [
+                        {
+                          "endTime": 1778,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 0
+                        },
+                        {
+                          "endTime": 3556,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 1778
+                        },
+                        {
+                          "endTime": 5334,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 3556
+                        },
+                        {
+                          "endTime": 7112,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 5334
+                        },
+                        {
+                          "endTime": 8890,
+                          "playbackType": "FADE_IN_OUT",
+                          "pointList": [
+                            {
+                              "index": 16,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 17,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 18,
+                              "intensity": 0.2
+                            },
+                            {
+                              "index": 19,
+                              "intensity": 0.2
+                            }
+                          ],
+                          "startTime": 7112
+                        }
+                      ]
+                    },
+                    "mode": "DOT_MODE",
+                    "pathMode": {
+                      "feedback": []
+                    }
+                  }
+                },
+                "name": "Effect 1",
+                "offsetTime": 8890,
+                "startTime": 2170
+              }
+            ],
+            "enable": True
+          }
+        ],
+        "updatedAt": 1603441965989
+      }
+    }
+  ],
+  "Submit": []
+}
+
 ZERO_CAL_BIG_DATA = {
   "Register": [
     {
