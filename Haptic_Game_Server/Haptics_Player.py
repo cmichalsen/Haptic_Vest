@@ -11,9 +11,13 @@ from websocket import create_connection
 # Keep track of current time
 CLOCK = datetime.now()
 
-MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0], "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0]}
+MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
+DEFAULT_MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
+
 PREV_MOTOR_COMMANDS = {}
 
+FRONT_MOTOR_LAYOUT = []
+BACK_MOTOR_LAYOUT = []
 
 class HapticsPlayer:
     def __init__(self):
@@ -25,9 +29,18 @@ class HapticsPlayer:
         for project_data in haptics_data:
             try:
                 if "VestFront" in project_data['Project']['layout']['layouts']:
+                    global FRONT_MOTOR_LAYOUT
+                    FRONT_MOTOR_LAYOUT = self.initialize_motor_layout(project_data['Project']['layout']['layouts']['VestFront'])
                     self.projects_front_vest.add_project_data(project_data)
-            except KeyError:
+            except KeyError as e:
+                print(f"add_haptics_data KeyError: {e}")
                 pass
+
+    def initialize_motor_layout(self, data):
+        motor_layouts = []
+        for motor in data:
+            motor_layouts.append([motor['x'], motor['y']])
+        return motor_layouts
 
     def run_haptics(self):
         """ Run all events required to generate motor commands
@@ -59,15 +72,15 @@ class Project:
         self.ws = create_connection("ws://192.168.0.53:80/ws")
 
     def add_tracks(self, project_data):
-        track_duration_ms = timedelta(milliseconds=project_data["mediaFileDuration"])
-        end_time = CLOCK + (track_duration_ms * 1000)
+        track_duration = timedelta(seconds=project_data["mediaFileDuration"])
+        end_time = CLOCK + track_duration
 
         for track in project_data["tracks"]:
             self.tracks.append(Track(track, end_time))
 
     def reset_motor_commands(self):
         global MOTOR_COMMANDS
-        MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0], "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0]}
+        MOTOR_COMMANDS = DEFAULT_MOTOR_COMMANDS
 
     def send(self, commands):
         print(commands)
@@ -336,5 +349,11 @@ class PathPoint:
 
     def update_motor_commands(self):
         global MOTOR_COMMANDS
-        commands = get_updated_path_motor_commands(self.x, self.y, self.intensity)
+        motor_layouts = []
+        if self.vest_type == "VestFront":
+            motor_layouts = FRONT_MOTOR_LAYOUT
+        elif self.vest_type == "VestBack":
+            motor_layouts = BACK_MOTOR_LAYOUT
+
+        commands = get_updated_path_motor_commands(self.x, self.y, self.intensity, motor_layouts)
         MOTOR_COMMANDS[self.vest_type] = migrate_motor_commands(MOTOR_COMMANDS[self.vest_type], commands)

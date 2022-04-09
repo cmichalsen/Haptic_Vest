@@ -10,20 +10,8 @@ TIME_CONST = 50
 # Amount of motor power to fluctuate when fading in/out
 FADE_IN_FADE_OUT = 0.2
 
-# Set minimum % power for PWM output (For PS4 Motors)
-MOTOR_MINIMUM_POWER = 0.7
+# Set minimum % power for PWM output (For Capsule Motors)
+MOTOR_MINIMUM_POWER = 0.5
 
 # For testing with LEDs
 # MOTOR_MINIMUM_POWER = 0.0
-
-
-# Motor x,y coordinates
-MOTORS = [[0, 0],
-          [0.5, 0],
-          [1, 0],
-          [0, 0.5],
-          [0.5, 0.5],
-          [1, 0.5],
-          [0, 1],
-          [0.5, 1],
-          [1, 1]]
