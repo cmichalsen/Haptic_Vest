@@ -31,6 +31,10 @@ class HapticsPlayer:
                     global FRONT_MOTOR_LAYOUT
                     FRONT_MOTOR_LAYOUT = self.initialize_motor_layout(
                         project_data['Project']['layout']['layouts']['VestFront'])
+
+                    global BACK_MOTOR_LAYOUT
+                    BACK_MOTOR_LAYOUT = self.initialize_motor_layout(
+                        project_data['Project']['layout']['layouts']['VestBack'])
                     self.projects_front_vest.add_project_data(project_data)
             except KeyError as e:
                 print(f"add_haptics_data KeyError: {e}")
@@ -84,7 +88,6 @@ class Project:
                           "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
 
     def send(self, commands):
-        # print(commands)
         self.ws.send(json.dumps(commands))
 
     def run_tracks(self):
@@ -129,7 +132,6 @@ class Track:
                 if effect.end_time < datetime.now():
                     # Remove completed effects
                     self.effects.remove(effect)
-                    print(f"Removed Effect after {datetime.now() - DEBUG_CREATED_AT} seconds")
                 else:
                     effect.run()
 
@@ -149,27 +151,26 @@ class Effect:
 class Mode:
     def __init__(self, mode_data, effect_start_time, effect_end_time):
         self.vest_back = Vest(mode_data["VestBack"], "VestBack", effect_start_time, effect_end_time)
-        # self.vest_front = Vest(mode_data["VestFront"], "VestFront", effect_start_time, effect_end_time, created_at)
+        self.vest_front = Vest(mode_data["VestFront"], "VestFront", effect_start_time, effect_end_time)
 
     def run(self):
         self.vest_back.run()
-        # self.vest_front.run()
+        self.vest_front.run()
 
 
 class Vest:
     def __init__(self, vest_data, vest_type, effect_start_time, effect_end_time):
-        self.dot_mode = DotMode(vest_data["dotMode"], vest_type, effect_start_time, effect_end_time)
-        # self.path_mode = PathMode(vest_data["pathMode"], vest_type, effect_start_time, effect_end_time, created_at)
+        self.dot_mode = DotMode(vest_data["dotMode"], vest_type, effect_start_time)
+        self.path_mode = PathMode(vest_data["pathMode"], vest_type, effect_start_time, effect_end_time)
 
     def run(self):
         self.dot_mode.run()
-        # self.path_mode.run()
+        self.path_mode.run()
 
 
 class DotMode:
-    def __init__(self, dot_data, vest_type, effect_start_time, effect_end_time):
+    def __init__(self, dot_data, vest_type, effect_start_time):
         self.effect_start_time = effect_start_time
-        self.effect_end_time = effect_end_time
         self.dot_connected = dot_data["dotConnected"]
         self.vest_type = vest_type
         self.feedback = []
@@ -183,7 +184,6 @@ class DotMode:
         for item in self.feedback:
             if item.end_time < datetime.now():
                 # Remove completed feedback
-                print(f"Removed Feedback after {datetime.now() - DEBUG_CREATED_AT} seconds which ran for {item.end_time - item.start_time} ms")
                 self.feedback.remove(item)
             else:
                 item.run()
@@ -244,28 +244,27 @@ class DotPoint:
 
 
 class PathMode:
-    def __init__(self, path_data, vest_type, effect_start_time, effect_offset_time, created_at):
-        self.created_at = created_at
+    def __init__(self, path_data, vest_type, effect_start_time, effect_end_time):
         self.effect_start_time = effect_start_time
-        self.effect_offset_time = effect_offset_time
+        self.effect_end_time = effect_end_time
         self.feedback = []
         self.vest_type = vest_type
         self.setup_feedback(path_data["feedback"])
 
     def setup_feedback(self, feedback):
         for item in feedback:
-            self.feedback.append(PathFeedback(item, self.vest_type, self.effect_start_time, self.effect_offset_time, self.created_at))
+            self.feedback.append(PathFeedback(item, self.vest_type, self.effect_start_time))
 
     def run(self):
-        for item in self.feedback:
-            item.run()
+
+        if datetime.now() < self.effect_end_time:
+            for item in self.feedback:
+                item.run()
 
 
 class PathFeedback:
-    def __init__(self, feedback_data, vest_type, effect_start_time, effect_offset_time, created_at):
-        self.created_at = created_at
-        self.effect_start_time = effect_start_time
-        self.effect_offset_time = effect_offset_time
+    def __init__(self, feedback_data, vest_type, effect_start_time):
+        self.start_time = effect_start_time
         self.moving_pattern = feedback_data["movingPattern"]
         self.playback_type = feedback_data["playbackType"]
         self.point_list = []
@@ -277,18 +276,18 @@ class PathFeedback:
 
         if point_list_count == 1:
             self.point_list.append(
-                PathPoint(point_list[0], self.vest_type, self.effect_start_time, self.effect_offset_time, self.created_at, None, True))
+                PathPoint(point_list[0], self.vest_type, self.start_time, None, True))
         else:
             point_index = 1
             for point in point_list:
                 if point_index < point_list_count:
                     self.point_list.append(
-                        PathPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time,
+                        PathPoint(point, self.vest_type, self.start_time,
                                   point_list[point_index]))
                 else:
                     # There are no more points after this one
                     self.point_list.append(
-                        PathPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time))
+                        PathPoint(point, self.vest_type, self.start_time))
                 point_index += 1
 
     def run(self):
@@ -297,26 +296,31 @@ class PathFeedback:
 
 
 class PathPoint:
-    def __init__(self, point_data, vest_type, effect_start_time, effect_offset_time, created_at, next_point_data=None,
+    def __init__(self, point_data, vest_type, feedback_start_time, next_point_data=None,
                  is_single_point=False):
+        self.feedback_start_time = feedback_start_time
         self.is_single_point = is_single_point
-        self.effect_start_time = effect_start_time
-        self.effect_offset_time = effect_offset_time
         self.vest_type = vest_type
         self.intensity = point_data["intensity"]
         self.time = point_data["time"]
-        self.start_time = (timedelta(milliseconds=self.time)) + created_at
-        self.end_time = (timedelta(milliseconds=self.effect_offset_time)) + self.start_time
+        self.start_time = (timedelta(milliseconds=self.time)) + feedback_start_time
+        self.end_time = self.start_time
         self.x = point_data["x"]
         self.y = point_data["y"]
         self.next_point = next_point_data
+        self.update_end_time()
         self.x_rate = 0.0
         self.y_rate = 0.0
         self.get_rates()
 
+    def update_end_time(self):
+        if self.next_point is not None:
+            self.end_time = (timedelta(milliseconds=self.next_point["time"]) + self.feedback_start_time)
+
     def get_rates(self):
         if self.next_point is not None:
-            duration = self.effect_offset_time - self.effect_start_time
+            duration = self.end_time - self.start_time
+            duration = duration.total_seconds() * 1000
             x_distance = self.next_point["x"] - self.x
             y_distance = self.next_point["y"] - self.y
 
@@ -339,7 +343,8 @@ class PathPoint:
         if self.is_single_point:
             results = self.start_time <= datetime.now() < self.end_time
         else:
-            results = self.start_time <= datetime.now() < ((timedelta(milliseconds=self.next_point["time"])) + datetime.now())
+            # make sure we are not on the next point
+            results = self.start_time <= datetime.now() < ((timedelta(milliseconds=self.next_point["time"])) + self.feedback_start_time)
         return results
 
     def update_motor_commands(self):

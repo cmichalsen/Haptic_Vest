@@ -11,8 +11,7 @@ class GameServer:
         # self.test_data()
 
     def test_data(self):
-        self.haptics.add_haptics_data(PHAS_TRUCK_START["Register"])
-
+        self.haptics.add_haptics_data(PHAS_PLAYER_DIE["Register"])
 
     def detected_haptic_events(self, data):
         """ Check for haptic events
@@ -69,5 +68,3 @@ if __name__ == "__main__":
     # Start and run websocket server forever
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()
-
-    print("Server crashed")
