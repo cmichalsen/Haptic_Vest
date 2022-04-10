@@ -14,7 +14,10 @@
 #include "EEPROM_Handler.h"
 #include <Adafruit_PWMServoDriver.h> // https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library/archive/master.zip
 
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40); // Default (No bridges)
+Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41); // Bridge A0
+Adafruit_PWMServoDriver pwm3 = Adafruit_PWMServoDriver(0x42); // Bridge A1
+
 
 // Used for blocking other operations while connected to game server
 bool GAME_SERVER_CONNECTED = false;
@@ -42,14 +45,45 @@ float min_pwm = 2048.0;
 float max_pwm = 4095.0;
 
 /**
-   Set PWM Output for vest motor
+   Set PWM Output for front vest motor
 
    Args:
       channel:  Target motor
       power:    Target percentage power
 */
-void controlMotor(uint8_t channel, float power) {
-  pwm.setPWM(channel, 0, power * max_pwm);
+void controlFrontMotors(uint8_t channel, float power) {
+  if (channel < 16) {
+    pwm1.setPWM(channel, 0, power * max_pwm);
+  }
+  else {
+    pwm2.setPWM(channel - 16, 0, power * max_pwm);
+  }
+}
+
+/**
+   Set PWM Output for front vest motor
+
+   Args:
+      channel:  Target motor
+      power:    Target percentage power
+*/
+void controlBackMotors(uint8_t channel, float power) {
+  if (channel < 12) {
+    // offset by 4 as front and back vest are sharing boards
+    pwm2.setPWM(channel + 4, 0, power * max_pwm);
+  }
+  else {
+    pwm3.setPWM(channel - 12, 0, power * max_pwm);
+  }
+}
+
+/**
+   Turn off all motors
+*/
+void resetAllMotors() {
+  pwm1.reset();
+  pwm2.reset();
+  pwm3.reset();
 }
 
 /**
@@ -84,7 +118,15 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len)
       for (const auto &value : variant["VestFront"].as<JsonArray>())
       {
         // Command specific motor to target power level
-        controlMotor(i, value.as<float>());
+        controlFrontMotors(i, value.as<float>());
+        i++;
+      }
+
+      i = 0;
+      for (const auto &value : variant["VestBack"].as<JsonArray>())
+      {
+        // Command specific motor to target power level
+        controlBackMotors(i, value.as<float>());
         i++;
       }
     }
@@ -102,11 +144,13 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
     case WS_EVT_CONNECT:
       GAME_SERVER_CONNECTED = true;
       setGameServerStatus(true);
+      resetAllMotors();
       Serial.println("Connected to Haptic game server");
       break;
     case WS_EVT_DISCONNECT:
       GAME_SERVER_CONNECTED = false;
       setGameServerStatus(false);
+      resetAllMotors();
       Serial.println("Disconnected from Haptic game server");
       break;
     case WS_EVT_DATA:
@@ -115,6 +159,7 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
     case WS_EVT_PONG:
       break;
     case WS_EVT_ERROR:
+      resetAllMotors();
       Serial.println("WS_EVT_ERROR");
       break;
   }
@@ -130,11 +175,16 @@ void initWebSocket()
 }
 
 /**
- * Initialize PWM board
- */
+   Initialize PWM board
+*/
 void initPWM() {
-  pwm.begin();
-  pwm.setPWMFreq(1600);  // This is the maximum PWM frequency
+  pwm1.begin();
+  pwm1.setPWMFreq(1600);
+  pwm2.begin();
+  pwm2.setPWMFreq(1600);
+  pwm3.begin();
+  pwm3.setPWMFreq(1600);
+  resetAllMotors();
 }
 
 /**
@@ -149,8 +199,8 @@ void connectWiFi()
 }
 
 /**
- * Start the server
- */
+   Start the server
+*/
 void startServer()
 {
   server.begin();
