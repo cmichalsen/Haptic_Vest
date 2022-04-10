@@ -43,6 +43,7 @@ IPAddress subnet(255, 255, 0, 0);
 
 float min_pwm = 2048.0;
 float max_pwm = 4095.0;
+int pwm_frequency = 5000;
 
 /**
    Set PWM Output for front vest motor
@@ -81,9 +82,15 @@ void controlBackMotors(uint8_t channel, float power) {
    Turn off all motors
 */
 void resetAllMotors() {
-  pwm1.reset();
-  pwm2.reset();
-  pwm3.reset();
+  for (int i = 0; i < 20; i++) {
+    pwm1.setPWM(i, 0, 0);
+  }
+  for (int i = 0; i < 20; i++) {
+    pwm2.setPWM(i, 0, 0);
+  }
+  for (int i = 0; i < 20; i++) {
+    pwm3.setPWM(i, 0, 0);
+  }
 }
 
 /**
@@ -179,11 +186,11 @@ void initWebSocket()
 */
 void initPWM() {
   pwm1.begin();
-  pwm1.setPWMFreq(1600);
+  pwm1.setPWMFreq(pwm_frequency);
   pwm2.begin();
-  pwm2.setPWMFreq(1600);
+  pwm2.setPWMFreq(pwm_frequency);
   pwm3.begin();
-  pwm3.setPWMFreq(1600);
+  pwm3.setPWMFreq(pwm_frequency);
   resetAllMotors();
 }
 
