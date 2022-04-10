@@ -9,13 +9,13 @@ from websocket import create_connection
 
 MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                   "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
-DEFAULT_MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                          "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
 
 PREV_MOTOR_COMMANDS = {}
 
 FRONT_MOTOR_LAYOUT = []
 BACK_MOTOR_LAYOUT = []
+
+DEBUG_CREATED_AT = None
 
 
 class HapticsPlayer:
@@ -54,7 +54,10 @@ class HapticProject:
         self.project = Project()
 
     def add_project_data(self, project_data):
-        self.project.add_tracks(project_data["Project"])
+        global DEBUG_CREATED_AT
+        created_at = datetime.now()
+        DEBUG_CREATED_AT = created_at
+        self.project.add_tracks(project_data["Project"], created_at)
 
     def run(self):
         thread = Thread(target=self.project.run_tracks, name="Track Processing")
@@ -68,8 +71,7 @@ class Project:
         # Create websocket connection to Haptic vest module
         self.ws = create_connection("ws://192.168.0.53:80/ws")
 
-    def add_tracks(self, project_data):
-        created_at = datetime.now()
+    def add_tracks(self, project_data, created_at):
         track_duration = timedelta(seconds=project_data["mediaFileDuration"])
         end_time = created_at + track_duration
 
@@ -78,10 +80,11 @@ class Project:
 
     def reset_motor_commands(self):
         global MOTOR_COMMANDS
-        MOTOR_COMMANDS = DEFAULT_MOTOR_COMMANDS
+        MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                          "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
 
     def send(self, commands):
-        print(commands)
+        # print(commands)
         self.ws.send(json.dumps(commands))
 
     def run_tracks(self):
@@ -90,14 +93,11 @@ class Project:
             while len(self.tracks) != 0:
 
                 for track in self.tracks:
-                    track_end_time = track.get_end_time()
-                    if track_end_time <= datetime.now():
+                    if track.end_time < datetime.now():
                         # Remove expired tracks
                         self.tracks.remove(track)
                     else:
                         track.run()
-
-                global MOTOR_COMMANDS
                 try:
                     if MOTOR_COMMANDS != PREV_MOTOR_COMMANDS:
                         self.send(MOTOR_COMMANDS)
@@ -117,11 +117,7 @@ class Track:
         self.effects = []
         self.enable = track_data["enable"]
         self.setup_effects(track_data["effects"])
-        self.track_completed = False
         self.end_time = end_time
-
-    def get_end_time(self):
-        return self.end_time
 
     def setup_effects(self, track_effects):
         for effect in track_effects:
@@ -130,17 +126,20 @@ class Track:
     def run(self):
         if datetime.now() < self.end_time:
             for effect in self.effects:
-                effect.run()
+                if effect.end_time < datetime.now():
+                    # Remove completed effects
+                    self.effects.remove(effect)
+                    print(f"Removed Effect after {datetime.now() - DEBUG_CREATED_AT} seconds")
+                else:
+                    effect.run()
 
 
 class Effect:
     def __init__(self, effect_data, created_at):
         self.name = effect_data["name"]
-        self.offset_time = effect_data["offsetTime"]
         self.start_time = (timedelta(milliseconds=effect_data["startTime"])) + created_at
         self.end_time = (timedelta(milliseconds=effect_data["offsetTime"])) + self.start_time
-        self.start_time_ms = effect_data["startTime"]
-        self.modes = Mode(effect_data["modes"], self.start_time_ms, self.offset_time, created_at)
+        self.modes = Mode(effect_data["modes"], self.start_time, self.end_time)
 
     def run(self):
         if self.start_time <= datetime.now() < self.end_time:
@@ -148,30 +147,29 @@ class Effect:
 
 
 class Mode:
-    def __init__(self, mode_data, effect_start_time, effect_offset_time, created_at):
-        self.vest_back = Vest(mode_data["VestBack"], "VestBack", effect_start_time, effect_offset_time, created_at)
-        self.vest_front = Vest(mode_data["VestFront"], "VestFront", effect_start_time, effect_offset_time, created_at)
+    def __init__(self, mode_data, effect_start_time, effect_end_time):
+        self.vest_back = Vest(mode_data["VestBack"], "VestBack", effect_start_time, effect_end_time)
+        # self.vest_front = Vest(mode_data["VestFront"], "VestFront", effect_start_time, effect_end_time, created_at)
 
     def run(self):
         self.vest_back.run()
-        self.vest_front.run()
+        # self.vest_front.run()
 
 
 class Vest:
-    def __init__(self, vest_data, vest_type, effect_start_time, effect_offset_time, created_at):
-        self.dot_mode = DotMode(vest_data["dotMode"], vest_type, effect_start_time, effect_offset_time, created_at)
-        self.path_mode = PathMode(vest_data["pathMode"], vest_type, effect_start_time, effect_offset_time, created_at)
+    def __init__(self, vest_data, vest_type, effect_start_time, effect_end_time):
+        self.dot_mode = DotMode(vest_data["dotMode"], vest_type, effect_start_time, effect_end_time)
+        # self.path_mode = PathMode(vest_data["pathMode"], vest_type, effect_start_time, effect_end_time, created_at)
 
     def run(self):
         self.dot_mode.run()
-        self.path_mode.run()
+        # self.path_mode.run()
 
 
 class DotMode:
-    def __init__(self, dot_data, vest_type, effect_start_time, effect_offset_time, created_at):
-        self.created_at = created_at
+    def __init__(self, dot_data, vest_type, effect_start_time, effect_end_time):
         self.effect_start_time = effect_start_time
-        self.effect_offset_time = effect_offset_time
+        self.effect_end_time = effect_end_time
         self.dot_connected = dot_data["dotConnected"]
         self.vest_type = vest_type
         self.feedback = []
@@ -179,21 +177,23 @@ class DotMode:
 
     def setup_feedback(self, feedback):
         for item in feedback:
-            self.feedback.append(DotFeedback(item, self.vest_type, self.effect_start_time, self.effect_offset_time, self.created_at))
+            self.feedback.append(DotFeedback(item, self.vest_type, self.effect_start_time))
 
     def run(self):
         for item in self.feedback:
-            item.run()
+            if item.end_time < datetime.now():
+                # Remove completed feedback
+                print(f"Removed Feedback after {datetime.now() - DEBUG_CREATED_AT} seconds which ran for {item.end_time - item.start_time} ms")
+                self.feedback.remove(item)
+            else:
+                item.run()
 
 
 class DotFeedback:
-    def __init__(self, feedback_data, vest_type, effect_start_time, effect_offset_time, created_at):
-        self.created_at = created_at
-        self.effect_start_time = effect_start_time
-        self.effect_offset_time = effect_offset_time
-        self.end_time = feedback_data["endTime"]
+    def __init__(self, feedback_data, vest_type, effect_start_time):
         self.playback_type = feedback_data["playbackType"]
-        self.start_time = feedback_data["startTime"]
+        self.start_time = (timedelta(milliseconds=feedback_data["startTime"])) + effect_start_time
+        self.end_time = (timedelta(milliseconds=feedback_data["endTime"])) + effect_start_time
         self.point_list = []
         self.vest_type = vest_type
         self.setup_point_list(feedback_data["pointList"])
@@ -201,7 +201,7 @@ class DotFeedback:
     def setup_point_list(self, point_list):
         for point in point_list:
             self.point_list.append(
-                DotPoint(point, self.vest_type, self.effect_start_time, self.effect_offset_time, self.playback_type, self.created_at))
+                DotPoint(point, self.vest_type, self.start_time, self.end_time, self.playback_type))
 
     def run(self):
         for point in self.point_list:
@@ -209,26 +209,20 @@ class DotFeedback:
 
 
 class DotPoint:
-    def __init__(self, point_data, vest_type, effect_start_time, effect_offset_time, playback_type, created_at):
-        self.effect_start_time = effect_start_time
-        self.effect_offset_time = effect_offset_time
+    def __init__(self, point_data, vest_type, feedback_start_time, feedback_end_time, playback_type):
         self.playback_type = playback_type
         self.playback_rate = 0
         self.index = point_data["index"]
         self.intensity = point_data["intensity"]
-        self.start_time = (timedelta(milliseconds=self.effect_start_time)) + created_at
-        self.end_time = (timedelta(milliseconds=self.effect_offset_time)) + self.start_time
+        self.start_time = feedback_start_time
+        self.end_time = feedback_end_time
         self.vest_type = vest_type
         self.setup_playback_rate()
-        self.enable = False
-        self.started = False
 
     def setup_playback_rate(self):
         if self.playback_type == "FADE_IN_OUT":
             # initialize with fade in rate using an decreased intensity
             self.playback_rate = FADE_IN_FADE_OUT * -1
-        else:
-            pass
 
     def update_playback_rate(self):
         if self.playback_type == "FADE_IN_OUT":
@@ -241,18 +235,7 @@ class DotPoint:
             self.update_motor_commands()
 
     def is_node_active(self):
-        active = self.start_time <= datetime.now() < self.end_time
-
-        if active:
-            self.enable = True
-            self.started = True
-        elif self.enable is False and self.started is True:
-            # Debugging purposes
-            pass
-        else:
-            self.enable = False
-
-        return active
+        return self.start_time <= datetime.now() < self.end_time
 
     def update_motor_commands(self):
         global MOTOR_COMMANDS
