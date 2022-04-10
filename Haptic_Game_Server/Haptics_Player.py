@@ -7,10 +7,6 @@ from Haptic_Game_Server.Motor import get_updated_path_motor_commands, migrate_mo
     get_updated_dots_motor_commands, fade_in_fade_out
 from websocket import create_connection
 
-# Keep track of current time
-CLOCK = datetime.now()
-
-
 MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                   "VestBack": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
 DEFAULT_MOTOR_COMMANDS = {"VestFront": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -57,9 +53,6 @@ class HapticProject:
     def __init__(self):
         self.project = Project()
 
-        global CLOCK
-        CLOCK = datetime.now()
-
     def add_project_data(self, project_data):
         self.project.add_tracks(project_data["Project"])
 
@@ -76,7 +69,7 @@ class Project:
         self.ws = create_connection("ws://192.168.0.53:80/ws")
 
     def add_tracks(self, project_data):
-        created_at = CLOCK
+        created_at = datetime.now()
         track_duration = timedelta(seconds=project_data["mediaFileDuration"])
         end_time = created_at + track_duration
 
@@ -93,15 +86,12 @@ class Project:
 
     def run_tracks(self):
         global PREV_MOTOR_COMMANDS
-        global CLOCK
         while True:
             while len(self.tracks) != 0:
 
-                CLOCK = datetime.now()
-
                 for track in self.tracks:
                     track_end_time = track.get_end_time()
-                    if track_end_time <= CLOCK:
+                    if track_end_time <= datetime.now():
                         # Remove expired tracks
                         self.tracks.remove(track)
                     else:
@@ -138,7 +128,7 @@ class Track:
             self.effects.append(Effect(effect, self.created_at))
 
     def run(self):
-        if CLOCK < self.end_time:
+        if datetime.now() < self.end_time:
             for effect in self.effects:
                 effect.run()
 
@@ -153,7 +143,7 @@ class Effect:
         self.modes = Mode(effect_data["modes"], self.start_time_ms, self.offset_time, created_at)
 
     def run(self):
-        if self.start_time <= CLOCK < self.end_time:
+        if self.start_time <= datetime.now() < self.end_time:
             self.modes.run()
 
 
@@ -230,6 +220,8 @@ class DotPoint:
         self.end_time = (timedelta(milliseconds=self.effect_offset_time)) + self.start_time
         self.vest_type = vest_type
         self.setup_playback_rate()
+        self.enable = False
+        self.started = False
 
     def setup_playback_rate(self):
         if self.playback_type == "FADE_IN_OUT":
@@ -249,7 +241,18 @@ class DotPoint:
             self.update_motor_commands()
 
     def is_node_active(self):
-        return self.start_time <= CLOCK < self.end_time
+        active = self.start_time <= datetime.now() < self.end_time
+
+        if active:
+            self.enable = True
+            self.started = True
+        elif self.enable is False and self.started is True:
+            # Debugging purposes
+            pass
+        else:
+            self.enable = False
+
+        return active
 
     def update_motor_commands(self):
         global MOTOR_COMMANDS
@@ -351,9 +354,9 @@ class PathPoint:
     def is_node_active(self):
         results = False
         if self.is_single_point:
-            results = self.start_time <= CLOCK < self.end_time
+            results = self.start_time <= datetime.now() < self.end_time
         else:
-            results = self.start_time <= CLOCK < ((timedelta(milliseconds=self.next_point["time"])) + CLOCK)
+            results = self.start_time <= datetime.now() < ((timedelta(milliseconds=self.next_point["time"])) + datetime.now())
         return results
 
     def update_motor_commands(self):
