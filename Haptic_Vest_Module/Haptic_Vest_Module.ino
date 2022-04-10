@@ -49,13 +49,7 @@ float max_pwm = 4095.0;
       power:    Target percentage power
 */
 void controlMotor(uint8_t channel, float power) {
-  // Make sure we don't go over max pwm
-  if (power > 1) {
-    power = 1;
-  }
-
-  power = power * max_pwm;
-  pwm.setPWM(channel, 0, power);
+  pwm.setPWM(channel, 0, power * max_pwm);
 }
 
 /**
@@ -72,13 +66,12 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len)
 
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
   {
-
+    // Serial.write(data, len);
     // Ex. {"VestFront": [0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "VestBack": []}
 
     // Convert incoming data to Json
-    const uint8_t size = JSON_OBJECT_SIZE(2) + 200;
-    StaticJsonDocument<size> doc;
-    deserializeJson(doc, data, DeserializationOption::NestingLimit(20));
+    DynamicJsonDocument doc(2048);
+    deserializeJson(doc, data);
 
     // If data contains VestFront then parse it from json
     bool vestFront = doc.containsKey("VestFront");
