@@ -1,9 +1,7 @@
 #include <FS.h> //this needs to be first, or it all crashes and burns...
 #include <ESPAsyncWiFiManager.h>  // https://github.com/alanswx/ESPAsyncWiFiManager
 #include <Arduino.h>
-#include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
-#include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <string>
 #include <stdio.h>
